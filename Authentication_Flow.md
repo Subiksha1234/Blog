@@ -1,5 +1,6 @@
 🔐 Authentication Flow (Request → Response)
 
+
 1️⃣ User Login Request
 
 Endpoint: /api/token/ (or your login endpoint)
@@ -13,6 +14,7 @@ Payload (JSON):
   "password": "password123"
 }
 
+
 2️⃣ Server Verifies Credentials
 
 Django REST Framework checks if the username exists.
@@ -24,6 +26,7 @@ If invalid → returns 401 Unauthorized
 {
   "detail": "No active account found with the given credentials"
 }
+
 
 3️⃣ Server Issues Tokens
 
@@ -38,6 +41,7 @@ Response Example:
   "access": "<access_token>",
   "refresh": "<refresh_token>"
 }
+
 
 4️⃣ Client Sends Authenticated Requests
 
@@ -55,6 +59,7 @@ Content-Type: application/json
   "content": "This is the content of the post."
 }
 
+
 5️⃣ Server Validates Token
 
 DRF SimpleJWT middleware checks:
@@ -71,6 +76,7 @@ If invalid → returns 401 Unauthorized:
 
 If valid → user identity is retrieved and request proceeds.
 
+
 6️⃣ Authorization Check
 
 After token validation, DRF checks permissions:
@@ -82,6 +88,7 @@ If not permitted → returns 403 Forbidden:
 {
   "detail": "You do not have permission to perform this action."
 }
+
 
 7️⃣ Response to Request
 
@@ -95,6 +102,7 @@ Example (creating a post):
   "content": "This is the content of the post.",
   "author": "user1",
 }
+
 
 8️⃣ Token Refresh
 
