@@ -1,0 +1,182 @@
+# 📘 Blog API -- Full Project Documentation
+
+## 📝 1. Project Overview
+
+The **Blog API** is a RESTful backend system built using **Django REST
+Framework (DRF)**.\
+It allows users to create, read, update, and delete blog posts and
+comments.\
+The system also includes authentication, so only authorized users can
+perform restricted actions like posting, updating, or deleting.
+
+This project is designed with clean separation between models,
+serializers, views, and URLs, making it highly maintainable and
+scalable.
+
+------------------------------------------------------------------------
+
+## 🏗️ 2. System Architecture
+
+### **Layers**
+
+-   **Models:** Define database structure for Posts, Comments, and
+    Users.
+-   **Serializers:** Convert model data to JSON and validate incoming
+    data.
+-   **Views:** Handle the business logic for CRUD operations.
+-   **URLs:** Map endpoints to the respective views.
+
+### **Tech Used**
+
+-   Django REST Framework
+-   PostgreSQL 
+-   JWT Authentication (SimpleJWT)
+
+------------------------------------------------------------------------
+
+## 📂 3. Database Model Structure
+
+### **📝 Post Table**
+
+  Field        Type               Description
+  ------------ ------------------ -------------------
+  id           AutoField (PK)     Post ID
+  title        CharField(200)     Title of the post
+  content      TextField          Full post content
+  author       ForeignKey(User)   Post owner
+  created_at   DateTimeField      Timestamp
+  updated_at   DateTimeField      Timestamp
+
+------------------------------------------------------------------------
+
+### **💬 Comment Table**
+
+  Field        Type             Description
+  ------------ ---------------- ---------------
+  id           AutoField (PK)   Comment ID
+  post         FK(Post)         Linked Post
+  text         TextField        Comment body
+  author       FK(User)         Who commented
+  created_at   DateTimeField    Timestamp
+
+------------------------------------------------------------------------
+
+### **👤 User Table**
+
+  Field        Type
+  ------------ --------------------
+  id           AutoField
+  username     CharField(unique)
+  email        EmailField(unique)
+  password     CharField (hashed)
+  created_at   DateTimeField
+  updated_at   DateTimeField
+
+------------------------------------------------------------------------
+
+## 🔄 4. Workflow (End-to-End)
+
+
+### **1️⃣Authenticated User**
+
+-   Can view all posts
+-   Can view a single post
+-   Can create a post
+-   Can create a comment
+-   Can view comments
+-   Can search posts using `?search=keyword`
+-   Can update their posts/comments
+-   Can delete their  posts/comments
+
+### **3️⃣ Authorization Rules**
+
+  Action                  Permission
+  ----------------------- ---------------------
+  List posts              Logged-in users
+  Retrieve single post    Logged-in users
+  Search posts            Logged-in users
+  Create post             Logged-in users
+  Update post             Only author
+  Delete post             Only author
+  Comment on post         Logged-in users
+  Update/Delete comment   Only author
+
+------------------------------------------------------------------------
+
+## 🔐 5. Authentication Flow (JWT Based)
+
+1.  User logs in with username & password.
+
+2.  Server verifies credentials and issues:
+
+    -   **Access Token**
+    -   **Refresh Token**
+
+3.  Access token is sent in headers:
+
+        Authorization: Bearer <access_token>
+
+4.  When a user tries to create/update/delete:
+
+    -   DRF checks if token is valid.
+    -   DRF checks whether the user have logged-in.
+
+5.  If valid → action allowed.\
+    If invalid → `401 Unauthorized`.
+
+------------------------------------------------------------------------
+
+## 🧩 6. API Endpoints
+
+### **Posts**
+
+  Method   Endpoint                    Description
+  -------- --------------------------- ----------------------
+  GET      /api/posts/                 List all posts
+  POST     /api/posts/                 Create new post
+  GET      /api/posts/`<id>`/          Retrieve single post
+  PUT      /api/posts/`<id>`/          Update post
+  DELETE   /api/posts/`<id>`/          Delete post
+  GET      /api/posts/?search=key      Search posts
+
+------------------------------------------------------------------------
+
+### **Comments**
+
+  Method   Endpoint                       Description
+  -------- ------------------------------ -------------------
+  GET      /api/comments/                 List all comments
+  POST     /api/comments/                 Create comment
+  GET      /api/comments/`<id>`{=html}/   Retrieve comment
+  PUT      /api/comments/`<id>`{=html}/   Update comment
+  DELETE   /api/comments/`<id>`{=html}/   Delete comment
+
+------------------------------------------------------------------------
+
+## 🔧 7. Error Handling
+
+### Common Errors:
+
+  Error              Cause                   Example
+  ------------------ ----------------------- -------------------------
+  401 Unauthorized   Missing/Invalid token   Posting without login
+  403 Forbidden      User not owner          Updating others' posts
+  404 Not Found      Invalid ID              Post 9999 doesn't exist
+  400 Bad Request    Missing fields          Title not provided
+
+------------------------------------------------------------------------
+
+## 🚀 8. Future Enhancements
+
+-   Category & Tags module
+-   Like/Dislike system
+-   Pagination for posts
+
+------------------------------------------------------------------------
+
+## 📌 9. Conclusion
+
+This Blog API provides a clean and fully functional foundation for a
+real blogging platform.\
+With authentication, permission control, search functionality, and full
+CRUD, it is production-ready and scalable for additional features.
